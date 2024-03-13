@@ -66,36 +66,7 @@ class _ReplayWidgetState extends State<ReplayWidget> {
     r_userDataStream = r_userDataStreamController.stream.asBroadcastStream();
 
     //merge two streams .
-    /*final sortedStreamItems =
-        Rx.merge([r_userDataStream, systemDataGenerator_R])
-            .bufferCount(2)
-            .map(
-              (events) => events.toList()
-                ..sort(
-                  (a, b) {
-                    //convert string to int of timestamp value.
-                    DateTime t1 = DateTime.parse(a['timeStamp']!).toUtc();
-                    DateTime t2 = DateTime.parse(b['timeStamp']!).toUtc();
 
-                    return t1.compareTo(t2);
-                  },
-                ),
-            )
-            .expand((elements) => elements)
-            .map((event) => event);
-    
-    replaySubjectItems.addStream(sortedStreamItems);
-//early
-    replaySubjectItems.listen((value) {
-      if (value['Name'] != null) {
-        print(value['Name']);
-      }
-      if (noOfItems <= itemLimit) {
-        l2.add(value);
-        noOfItems++;
-      }
-    });
-    */
     final sortedStreamItems =
         Rx.merge([r_userDataStream, systemDataGenerator_R])
             .distinctUnique()
@@ -145,14 +116,14 @@ class _ReplayWidgetState extends State<ReplayWidget> {
 
     _refreshController.dispose();
 
-    // replaySubjectItems
-    //     .doOnCancel(() => print("log replaySubject releasing stopped.."))
-    //     .listen(null);
+    replaySubjectItems
+        .doOnCancel(() => print("log replaySubject releasing stopped.."))
+        .listen(null);
 
     databaseInstance.clearReplayDB(); //clear the stuffs.
 
     r_userDataStreamController.close();
-    // r_userDataStream.listen(null);
+    r_userDataStream.listen(null);
 
     replaySubjectItems.close();
   }

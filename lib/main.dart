@@ -85,13 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final behaviorSubjectItems = BehaviorSubject<List<Map<String, String>>>();
 
-  Map<String, String> initialData = {"Name": "No name", "Usn": "no usn"};
-
   List<Map<String, String>> l1 = List.empty(growable: true);
-
-  late List<DataModel> cache;
-  bool isFirstAttemptRefresh = false;
-  List<Map<String, String>> bufferList = List.empty(growable: true);
 
   @override
   void initState() {
@@ -116,34 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
       behaviorSubjectItems.add(data);
     });
 
-    /*
-    Rx.merge([userDataStream, systemDataGenerator])
-        .distinctUnique()
-        .bufferTime(duration)
-        .map(
-          //[1,2..10]
-          (events) => events.toList()
-            ..sort(
-              (a, b) {
-                //convert string to int of timestamp value
-                DateTime t1 = DateTime.parse(a['timeStamp']!);
-                DateTime t2 = DateTime.parse(b['timeStamp']!);
-
-                return t1.compareTo(t2);
-              },
-            ),
-        )
-        .forEach((element) {
-      behaviorSubjectItems.add(element);
-    });*/
-
-    // behaviorSubjectItems.addStream(sortedStreamItems);
-
-    // behaviorSubjectItems.listen((value) {
-    // if (noOfItems <= itemLimit) {
-    //   noOfItems++;
-    //   l1.add(value);
-    // }
     behaviorSubjectItems.listen((value) {
       /*
       id = map['_colId'];
@@ -318,111 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Neither error nor success!'),
             );
           },
-        )
-
-        /* 
-       SmartRefresher(
-        enablePullDown: true,
-        // enablePullUp: true,
-        controller: _refreshController,
-        onRefresh: () async {
-          Future.delayed(Duration(seconds: 3), () async {
-            await _fetchData();
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Fetching new items from stream'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 2),
-            ),
-          );
-        },
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                //system data and user data
-
-                //past immediate events.
-                StreamBuilder(
-                    stream: Stream.f
-                   , builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    // if (noOfItems < itemLimit) {
-                    //   noOfItems += 2;
-                    //   // cache.addAll(snapshot.data!);
-                    //   cache = cache + snapshot.data!;
-                    // }
-                    cache.addAll(snapshot.data!);
-
-                    return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                        itemCount: cache.length,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          if (cache[index]['Name'] != null) {
-                            return Text(
-                              '${index + 1}-user data-> ${cache[index]['Name']!}',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.red,
-                              ),
-                            );
-                          }
-                          return Text(
-                            '${index + 1}-sys data -> ${cache[index]['timeStamp']!}',
-                            style: TextStyle(fontSize: 18),
-                          );
-                        });
-                  }
-                  if (snapshot.hasError) {
-                    return Text(
-                      snapshot.error.toString(),
-                      style: TextStyle(fontSize: 16),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: MediaQuery.of(context).size.height * 0.45,
-                      ),
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                        color: Colors.red,
-                      )),
-                    );
-                  }
-                  return Text(
-                    'Nothing',
-                    style: TextStyle(fontSize: 16),
-                  );
-                })
-              ],
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            showModalBottomSheet(
-                isDismissible: true,
-                enableDrag: true,
-                context: context,
-                builder: (context) {
-                  return displayBottomSheet(context);
-                });
-          }),
-   */
-
-        );
+        ));
   }
 
   Future<void> fetchPreviousItems(
